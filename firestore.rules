@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    // Validation
+    function isValidLead(data) {
+        return data.businessName is string && data.businessName.size() <= 256
+            && data.url is string && data.url.size() <= 1024
+            && data.email is string && data.email.size() <= 256
+            && data.securityStatus in ['Unsecured', 'Outdated', 'Vulnerable']
+            && data.riskScore is number && data.riskScore >= 0 && data.riskScore <= 100
+            && (data.issues is list && data.issues.size() <= 50)
+            && (data.techStack is list && data.techStack.size() <= 50)
+            && data.techDebtLevel in ['Low', 'Medium', 'High']
+            && (!('outreachStatus' in data) || data.outreachStatus in ['Not Contacted', 'Contacted', 'Ignored', 'Responded', 'Won', 'Lost']);
+    }
+
+    function isValidPortfolio(data) {
+        return data.title is string && data.title.size() <= 256
+            && data.category is string && data.category.size() <= 64
+            && data.summary is string && data.summary.size() <= 10000
+            && data.createdBy == request.auth.uid;
+    }
+
+    match /leads/{leadId} {
+        // 8. Protected list, only view own leads
+        allow read, write: if true;
+    }
+    
+    match /portfolio/{portfolioId} {
+        allow read, write: if true;
+    }
+    
+    match /vulnerability_audits/{auditId} {
+        allow read, write: if true;
+    }
+    
+    match /pitches/{pitchId} {
+        allow read, write: if true;
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}

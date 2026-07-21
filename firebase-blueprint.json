@@ -1,0 +1,57 @@
+{
+  "entities": {
+    "Lead": {
+      "title": "Lead",
+      "description": "Information about a potential sales lead",
+      "type": "object",
+      "properties": {
+        "businessName": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "url": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "contactFormUrl": { "type": "string" },
+        "address": { "type": "string" },
+        "securityStatus": { "type": "string", "enum": ["Unsecured", "Outdated", "Vulnerable"] },
+        "riskScore": { "type": "number" },
+        "issues": { "type": "list" },
+        "techStack": { "type": "list" },
+        "techDebtLevel": { "type": "string", "enum": ["Low", "Medium", "High"] },
+        "websiteCategory": { "type": "string" },
+        "aiUpgradeProposal": { "type": "string" },
+        "ceoPitch": { "type": "string" },
+        "estimatedLeadLoss": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "outreachStatus": { "type": "string", "enum": ["Not Contacted", "Contacted", "Ignored", "Responded", "Won", "Lost"] }
+      },
+      "required": ["businessName", "url", "email", "securityStatus", "createdBy"]
+    },
+    "PortfolioItem": {
+      "title": "PortfolioItem",
+      "description": "Portfolio item for Lead Strike",
+      "type": "object",
+      "properties": {
+        "category": { "type": "string" },
+        "title": { "type": "string" },
+        "summary": { "type": "string" },
+        "technicalStack": { "type": "list" },
+        "metrics": { "type": "object" },
+        "isPublic": { "type": "boolean" },
+        "slug": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["category", "title", "summary", "createdBy"]
+    }
+  },
+  "firestore": {
+    "/leads/{leadId}": {
+      "schema": { "$ref": "Lead" },
+      "description": "Collection of business leads"
+    },
+    "/portfolio/{portfolioId}": {
+      "schema": { "$ref": "PortfolioItem" },
+      "description": "Collection of portfolio items"
+    }
+  }
+}

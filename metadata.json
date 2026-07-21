@@ -1,0 +1,6 @@
+{
+  "name": "Remix: LeadStrike 2026",
+  "description": "AI-powered lead generation tool that identifies local businesses with unsecured websites and generates custom sales pitches.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
